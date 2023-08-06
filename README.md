@@ -1,1 +1,1 @@
-# AnimalLLM
+# AnimalImageAI
