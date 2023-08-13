@@ -1,17 +1,126 @@
 import os
 import pandas as pd
+from keras import models
 from keras.models import Sequential
 from keras.layers import Dropout, Dense, Activation, BatchNormalization
 from keras.preprocessing.image import ImageDataGenerator
+from keras.preprocessing import image
 from keras import layers, applications, Model
 from PIL import Image
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import numpy as np
+from aenum import Enum
 
 BATCH_SIZE = 15
 IMAGE_SIZE = (224,224)
+    
+def get_dictionary():
+    animalDict = {
+        0: "Antelope",
+        1: "Badger",
+        2: "Bat",
+        3: "Bear",
+        4: "Bee",
+        5: "Beetle",
+        6: "Bison",
+        7: "Boar",
+        8: "Butterfly",
+        9: "Cat",
+        10: "Caterpillar",
+        11: "Chimpanzee",
+        12: "Cockroach",
+        13: "Cow",
+        14: "Coyote",
+        15: "Crab",
+        16: "Crow",
+        17: "Deer",
+        18: "Dog",
+        19: "Dolphin",
+        20: "Donkey",
+        21: "Dragonfly",
+        22: "Duck",
+        23: "Eagle",
+        24: "Elephant",
+        25: "Flamingo",
+        26: "Fly",
+        27: "Fox",
+        28: "Goat",
+        29: "Goldfish",
+        30: "Goose",
+        31: "Gorilla",
+        32: "Grasshopper",
+        33: "Hamster",
+        34: "Hare",
+        35: "Hedgehog",
+        36: "Hippopotamus",
+        37: "Hornbill",
+        38: "Horse",
+        39: "Hummingbird",
+        40: "Hyena",
+        41: "Jellyfish",
+        42: "Kangaroo",
+        43: "Koala",
+        44: "Ladybug",
+        45: "Leopard",
+        46: "Lion",
+        47: "Lizard",
+        48: "Lobster",
+        49: "Mosquito",
+        50: "Moth",
+        51: "Mouse",
+        52: "Octopus",
+        53: "Okapi",
+        54: "Orangutan",
+        55: "Otter",
+        56: "Owl",
+        57: "Ox",
+        58: "Oyster",
+        59: "Panda",
+        60: "Parrot",
+        61: "Pelican",
+        62: "Penguin",
+        63: "Pig",
+        64: "Pigeon",
+        65: "Porcupine",
+        66: "Possum",
+        67: "Raccoon",
+        68: "Rat",
+        69: "Reindeer",
+        70: "Rhinoceros",
+        71: "Sandpiper",
+        72: "Seahorse",
+        73: "Seal",
+        74: "Shark",
+        75: "Sheep",
+        76: "Snake",
+        77: "Sparrow",
+        78: "Squid",
+        79: "Squirrel",
+        80: "Starfish",
+        81: "Swan",
+        82: "Tiger",
+        83: "Turkey",
+        84: "Turtle",
+        85: "Whale",
+        86: "Wolf",
+        87: "Wombat",
+        88: "Woodpecker",
+        89: "Zebra"
+    }
+    return animalDict
 
-if __name__ == "__main__":
+def guess_animal(model: Model):
+    test_image = image.load_img("C:/Users/akjoshi2003/Animal-ImageAI/example/zebraExamplePhoto.jpg", target_size=IMAGE_SIZE)
+    test_image - image.img_to_array(test_image)
+    test_image = np.expand_dims(test_image, axis=0)
+    result = model.predict(test_image)
+    resultIndex = np.array(result[0]).argmax()
+    animalDict = get_dictionary()
+    print(animalDict[resultIndex])
+
+
+def train_model():
     # Get the training dataframe
     path = "C:/Users/akjoshi2003/Animal-ImageAI/animals/animals/training"
     trainData = {"imgpath": [], "labels": []}
@@ -90,3 +199,8 @@ if __name__ == "__main__":
     print(model.summary())
 
     history = model.fit(train_set, steps_per_epoch = len(train_set), validation_data = test_set, validation_steps = len(test_set), epochs=10)
+    model.save("C:/Users/akjoshi2003/Animal-ImageAI/model.keras")
+
+if __name__ == "__main__":
+    model = models.load_model("C:/Users/akjoshi2003/Animal-ImageAI/model.keras")
+    guess_animal(model)
