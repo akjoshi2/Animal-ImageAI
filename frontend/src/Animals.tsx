@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { Button, MantineProvider, FileInput, Text, rem } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
+import axios from "axios";
 
 export default function Animals()
 {
@@ -9,13 +10,29 @@ export default function Animals()
     const [data, setData] = useState({animal: ""})
 
     function handleButtonClick() {
-        setLoading(true);
+        /*setLoading(true);
         fetch("/animals").then((res) => res.json().then((resp) => {
             setData({
                 animal: resp.Animal,
             });
-        }));
-        setLoading(false);
+            setLoading(false);
+        }));*/
+        if (value !== null)
+        {
+            setLoading(true);
+            let formData = new FormData()
+            formData.append('image',value);
+            axios({
+                    url: '/animals',
+                    method: 'POST',
+                    data: formData,
+            }).then((resp) => {
+                setData({
+                    animal: resp.data.Animal,
+                })
+                setLoading(false);
+            });
+        }
     }
 
     return (

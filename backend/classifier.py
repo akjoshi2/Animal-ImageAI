@@ -113,8 +113,8 @@ def get_dictionary():
 def load_animal_classifier():
     return models.load_model("C:/Users/akjoshi2003/Animal-ImageAI/backend/model.keras")
 
-def guess_animal(model: Model):
-    test_image = image.load_img("C:/Users/akjoshi2003/Animal-ImageAI/backend/example/zebraExamplePhoto.jpg", target_size=IMAGE_SIZE)
+def guess_animal(model: Model, imageUrl):
+    test_image = image.load_img(imageUrl, target_size=IMAGE_SIZE)
     test_image - image.img_to_array(test_image)
     test_image = np.expand_dims(test_image, axis=0)
     result = model.predict(test_image)
