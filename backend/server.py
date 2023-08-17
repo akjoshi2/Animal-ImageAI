@@ -1,6 +1,5 @@
 from flask import Flask, request
 import classifier
-import cv2
 
 app = Flask(__name__)
 

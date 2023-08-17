@@ -118,6 +118,7 @@ def guess_animal(model: Model, imageUrl):
     test_image - image.img_to_array(test_image)
     test_image = np.expand_dims(test_image, axis=0)
     result = model.predict(test_image)
+    print(result[0])
     resultIndex = np.array(result[0]).argmax()
     animalDict = get_dictionary()
     return animalDict[resultIndex]

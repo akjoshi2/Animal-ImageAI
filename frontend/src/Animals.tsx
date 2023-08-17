@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
-import { Button, MantineProvider, FileInput, Text, rem } from "@mantine/core";
+import { Button, MantineProvider, FileInput, Text, rem, Box, Group } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { IconUpload } from "@tabler/icons-react";
 import axios from "axios";
 
@@ -9,14 +10,13 @@ export default function Animals()
     const [loading, setLoading] = useState<boolean>(false);
     const [data, setData] = useState({animal: ""})
 
+    const form = useForm({
+        initialValues: {
+            image: value
+        }
+    })
+
     function handleButtonClick() {
-        /*setLoading(true);
-        fetch("/animals").then((res) => res.json().then((resp) => {
-            setData({
-                animal: resp.Animal,
-            });
-            setLoading(false);
-        }));*/
         if (value !== null)
         {
             setLoading(true);
@@ -35,12 +35,43 @@ export default function Animals()
         }
     }
 
+    function handleFormSubmit(image: File | null) {
+        if (image !== null)
+        {
+            setLoading(true);
+            let formData = new FormData()
+            formData.append('image',image);
+            axios({
+                    url: '/animals',
+                    method: 'POST',
+                    data: formData,
+            }).then((resp) => {
+                setData({
+                    animal: resp.data.Animal,
+                })
+                setLoading(false);
+            });
+        }
+    }
+
     return (
         <MantineProvider withGlobalStyles withNormalizeCSS>
-            <FileInput label = "Upload Image" placeholder="Pick file" icon={<IconUpload size={(rem(14))}/>} value={value} onChange={setValue}/>
+            {/*<FileInput label = "Upload Image" placeholder="Pick file" icon={<IconUpload size={(rem(14))}/>} value={value} onChange={setValue}/>
             <Button onClick={handleButtonClick} loading={loading} loaderPosition="right">
                 Predict Animal
-            </Button>
+            </Button>*/
+            }
+
+            <Box maw={300}>
+                <form onSubmit={form.onSubmit((values) => handleFormSubmit(values.image))}>
+                <FileInput label = "Upload Image" placeholder="Pick file" icon={<IconUpload size={(rem(14))}/>} {...form.getInputProps('image')}/>
+                <Group>
+                    <Button type="submit" onClick={handleButtonClick} loading={loading} loaderPosition="right">
+                    Predict Animal
+                    </Button>
+                </Group>
+                </form>
+            </Box>
             <Text>{data.animal}</Text>
         </MantineProvider>
     );
