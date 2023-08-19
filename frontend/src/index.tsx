@@ -5,11 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider} from "react-router-dom"
 import Animals from './Animals';
+import NavBar from './NavBar';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Animals />
+  }, 
+  {
+    path: "/dogs",
+    element: <App />
   }
 ])
 
